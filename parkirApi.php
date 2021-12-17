@@ -24,7 +24,7 @@ function create_parking_session()
     $waktu_keluar = $_POST["waktu_keluar"];
     $total = $_POST["total"];
     if($check_match == count($check)){
-        $result = mysqli_query($conn, "INSERT INTO user SET
+        $result = mysqli_query($conn, "INSERT INTO parkir SET
         id_parkir = '$id_parkir',
         id_user = '$id_user',
         card_uid = '$card_uid',
