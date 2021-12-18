@@ -5,6 +5,16 @@ if (function_exists($_GET['function'])) {
     $_GET['function']();
 }
 
+function generateRandomString($length = 8) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
+
 // Fungsi untuk buat voucher
 function create_voucher()
 {
@@ -19,7 +29,8 @@ function create_voucher()
     $id_user = $_POST["id_user"];
     $status = $_POST["status"];
     $nominal = $_POST["nominal"];
-    $kode_voucher = "KODEVOUCHERNICH";
+    
+    $kode_voucher = generateRandomString();
     if($check_match == count($check)){
         $result = mysqli_query($conn, "INSERT INTO voucher SET
         id_voucher = '$id_voucher',
@@ -47,5 +58,7 @@ function create_voucher()
     header('Content-Type: application/json');
     echo json_encode($response);
 }
+
+
 
 ?>
