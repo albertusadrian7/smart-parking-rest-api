@@ -11,16 +11,19 @@ function create_voucher()
     global $conn;
     $check = array(
         'id_voucher' => '',
+        'id_user' => '',
         'nominal' => '',
         'status' => '');
     $check_match = count(array_intersect_key($_POST, $check));
     $id_voucher = $_POST["id_voucher"];
+    $id_user = $_POST["id_user"];
     $status = $_POST["status"];
     $nominal = $_POST["nominal"];
     $kode_voucher = "KODEVOUCHERNICH";
     if($check_match == count($check)){
         $result = mysqli_query($conn, "INSERT INTO voucher SET
         id_voucher = '$id_voucher',
+        id_user = '$id_user',
         status = '$status',
         kode_voucher = '$kode_voucher',
         nominal = '$nominal'");

@@ -87,4 +87,43 @@ function top_up()
     echo json_encode($response);
 }
 
+function get_kartu_by_id(){
+    global $conn;
+    if ($_POST) {
+        $id_user = $_POST["id_user"];
+        $sql = "SELECT * FROM kartu WHERE id_user = '$id_user'";
+        $query = mysqli_query($conn, $sql);
+        $count = mysqli_num_rows($query);
+        $result = array();
+        if ($count > 0) {
+            while ($row = $query->fetch_assoc()) {
+                array_push($result, array(
+                    'id_user' => $row['id_user'],
+                    'card_uid' => $row['card_uid'],
+                    'saldo' => $row['saldo']
+                ));
+            };
+        }
+        if ($result) {
+            $response = array(
+                'status' => 1,
+                'message' => 'Success',
+                'data' => $result
+            );
+        } else {
+            $response = array(
+                'status' => 0,
+                'message' => 'No data found'
+            );
+        }
+    } else {
+        $response = array(
+            'status' => -1,
+            'message' => 'Silakan input id kartu'
+        );
+    }
+    header('Content-Type: application/json');
+    echo json_encode($response);
+}
+
  ?>
