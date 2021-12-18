@@ -87,6 +87,7 @@ function top_up()
     echo json_encode($response);
 }
 
+// Get Kartu By ID User
 function get_kartu_by_id(){
     global $conn;
     if ($_POST) {
@@ -119,7 +120,7 @@ function get_kartu_by_id(){
     } else {
         $response = array(
             'status' => -1,
-            'message' => 'Silakan input id kartu'
+            'message' => 'Silakan input id user'
         );
     }
     header('Content-Type: application/json');

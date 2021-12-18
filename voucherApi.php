@@ -57,6 +57,46 @@ function create_voucher()
     echo json_encode($response);
 }
 
-
+// Get Voucher By ID User
+function get_voucher_by_id(){
+    global $conn;
+    if ($_POST) {
+        $id_user = $_POST["id_user"];
+        $sql = "SELECT * FROM voucher WHERE id_user = '$id_user'";
+        $query = mysqli_query($conn, $sql);
+        $count = mysqli_num_rows($query);
+        $result = array();
+        if ($count > 0) {
+            while ($row = $query->fetch_assoc()) {
+                array_push($result, array(
+                    'id_voucher' => $row['id_voucher'],
+                    'id_user' => $row['id_user'],
+                    'kode_voucher' => $row['kode_voucher'],
+                    'status' => $row['status'],
+                    'nominal' => $row['nominal']
+                ));
+            };
+        }
+        if ($result) {
+            $response = array(
+                'status' => 1,
+                'message' => 'Success',
+                'data' => $result
+            );
+        } else {
+            $response = array(
+                'status' => 0,
+                'message' => 'No data found'
+            );
+        }
+    } else {
+        $response = array(
+            'status' => -1,
+            'message' => 'Silakan input id user'
+        );
+    }
+    header('Content-Type: application/json');
+    echo json_encode($response);
+}
 
 ?>
