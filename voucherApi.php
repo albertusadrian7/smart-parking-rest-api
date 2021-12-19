@@ -239,11 +239,10 @@ function top_up(){
     global $conn;
     if ($_POST) {
         $kode_voucher = $_POST["kode_voucher"];
+        $card_uid = $_POST["card_uid"];
         if(cari_voucher($kode_voucher)) {
             if(status_voucher($kode_voucher) == "false") {
                 $nominal = nominal_voucher($kode_voucher);
-                $id_user = pemilik_voucher($kode_voucher);
-                $card_uid = card_uid($id_user); 
                 $result = mysqli_query($conn, "UPDATE kartu SET 
                 saldo = saldo+$nominal
                 WHERE card_uid = '$card_uid'");
