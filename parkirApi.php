@@ -69,7 +69,7 @@ function update_parking_session()
             $result = mysqli_query($conn, "UPDATE parkir SET 
             waktu_keluar = '$waktu_keluar',
             total = '$total'
-            WHERE card_uid = '$card_uid'");
+            WHERE card_uid = '$card_uid' AND total = 0");
             if($result) {
                 $response=array(
                     'status' => 1,
