@@ -6,7 +6,7 @@ if (function_exists($_GET['function'])) {
 }
 
 function generateRandomString($length = 8) {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
     $randomString = '';
     for ($i = 0; $i < $length; $i++) {
@@ -25,17 +25,20 @@ function create_voucher()
         'nominal' => '');
     $check_match = count(array_intersect_key($_POST, $check));
     $id_voucher = $_POST["id_voucher"];
+    date_default_timezone_set('Asia/Jakarta');
+    $tanggal = date('Y-m-d H:i:s');
     $id_user = $_POST["id_user"];
-    $status = "menunggu pembayaran";
     $nominal = $_POST["nominal"];
     $kode_voucher = generateRandomString();
     if($check_match == count($check)){
         $result = mysqli_query($conn, "INSERT INTO voucher SET
         id_voucher = '$id_voucher',
         id_user = '$id_user',
-        status = '$status',
+        status = 'false',
         kode_voucher = '$kode_voucher',
-        nominal = '$nominal'");
+        nominal = '$nominal',
+        tanggal = '$tanggal'
+        ");
         if($result) {
             $response = array(
                 'status' => 1,
@@ -73,7 +76,8 @@ function get_voucher_by_id(){
                     'id_user' => $row['id_user'],
                     'kode_voucher' => $row['kode_voucher'],
                     'status' => $row['status'],
-                    'nominal' => $row['nominal']
+                    'nominal' => $row['nominal'],
+                    'tanggal' => $row['tanggal'],
                 ));
             };
         }

@@ -127,4 +127,42 @@ function get_kartu_by_id(){
     echo json_encode($response);
 }
 
+// Get ID User By Card UID
+function get_id_user(){
+    global $conn;
+    if ($_POST) {
+        $card_uid = $_POST["card_uid"];
+        $sql = "SELECT id_user FROM kartu WHERE card_uid = '$card_uid'";
+        $query = mysqli_query($conn, $sql);
+        $count = mysqli_num_rows($query);
+        $result = array();
+        if ($count > 0) {
+            while ($row = $query->fetch_assoc()) {
+                array_push($result, array(
+                    'id_user' => $row['id_user']
+                ));
+            };
+        }
+        if ($result) {
+            $response = array(
+                'status' => 1,
+                'message' => 'Success',
+                'data' => $result
+            );
+        } else {
+            $response = array(
+                'status' => 0,
+                'message' => 'No data found'
+            );
+        }
+    } else {
+        $response = array(
+            'status' => -1,
+            'message' => 'Silakan input card uid'
+        );
+    }
+    header('Content-Type: application/json');
+    echo json_encode($response);
+}
+
  ?>
