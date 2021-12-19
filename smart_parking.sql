@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 18, 2021 at 09:27 AM
+-- Generation Time: Dec 19, 2021 at 09:21 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.14
 
@@ -61,7 +61,7 @@ CREATE TABLE `parkir` (
 --
 
 INSERT INTO `parkir` (`id_parkir`, `id_user`, `card_uid`, `waktu_masuk`, `waktu_keluar`, `total`) VALUES
-(1, 2, 'IDCARD1234', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0),
+(1, 2, 'IDCARD1234', '2021-12-15 18:50:15', '2021-12-15 19:50:21', 1000),
 (2, 1, 'ADA123', '2021-12-15 00:27:43', '2021-12-15 00:45:43', 15000),
 (3, 1, 'ADA123', '2021-12-15 08:43:43', '2021-12-15 09:45:43', 15000),
 (4, 1, 'IDCARD1234', '2021-12-15 08:43:43', '2021-12-15 09:45:43', 15000),
@@ -106,17 +106,23 @@ CREATE TABLE `voucher` (
   `id_user` int(11) NOT NULL,
   `kode_voucher` varchar(250) NOT NULL,
   `status` varchar(100) NOT NULL,
-  `nominal` int(11) NOT NULL
+  `nominal` int(11) NOT NULL,
+  `tanggal` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `voucher`
 --
 
-INSERT INTO `voucher` (`id_voucher`, `id_user`, `kode_voucher`, `status`, `nominal`) VALUES
-(1, 1, 'KODEVOUCHERNICH', 'menunggu pembayaran', 5000),
-(4, 2, 'KODEVOUCHERNICH', 'menunggu pembayaran', 10000),
-(5, 2, 'KODEVOUCHERNICH', 'menunggu pembayaran', 15000);
+INSERT INTO `voucher` (`id_voucher`, `id_user`, `kode_voucher`, `status`, `nominal`, `tanggal`) VALUES
+(1, 1, 'KODEVOUCHERNICH', 'false', 5000, '2021-12-19 13:39:08'),
+(4, 2, 'KODEVOUCHERNICH', 'false', 10000, '2021-12-18 13:39:12'),
+(5, 2, 'KODEVOUCHERNICH', 'false', 15000, '2021-12-17 13:39:18'),
+(6, 2, 'R6Whql2Y', 'false', 15000, '2021-12-16 13:39:20'),
+(7, 2, 'TgO77QkO', 'false', 25000, '2021-12-15 13:39:23'),
+(12, 2, 'ILktsdG3', 'true', 7000, '2021-12-14 13:39:26'),
+(20, 2, 'NTWXM5JJ', 'false', 8000, '2021-12-10 13:39:26'),
+(27, 2, 'ZHXHVQQL', 'false', 9000, '2021-12-19 14:26:44');
 
 --
 -- Indexes for dumped tables
@@ -166,7 +172,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `voucher`
 --
 ALTER TABLE `voucher`
-  MODIFY `id_voucher` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_voucher` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
