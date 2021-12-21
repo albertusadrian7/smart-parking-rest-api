@@ -240,24 +240,32 @@ function top_up(){
     if ($_POST) {
         $kode_voucher = $_POST["kode_voucher"];
         $card_uid = $_POST["card_uid"];
+        $saldo = $_POST["saldo"];
         if(cari_voucher($kode_voucher)) {
             if(status_voucher($kode_voucher) == "false") {
                 $nominal = nominal_voucher($kode_voucher);
-                $result = mysqli_query($conn, "UPDATE kartu SET 
-                saldo = $nominal
-                WHERE card_uid = '$card_uid'");
-                if ($result) {
-                    $response = array(
-                        'status' => 1,
-                        'message' => $nominal
-                    );
+                if(!($saldo+$nominal) > 255000) {
+                    $result = mysqli_query($conn, "UPDATE kartu SET 
+                    saldo = $saldo+$nominal
+                    WHERE card_uid = '$card_uid'");
+                    if ($result) {
+                        $response = array(
+                            'status' => 1,
+                            'message' => $nominal
+                        );
+                    } else {
+                        $response = array(
+                            'status' => 0,
+                            'message' => 'Top up saldo gagal!'
+                        );
+                    }
+                    pakai_voucher($kode_voucher);
                 } else {
                     $response = array(
-                        'status' => 0,
-                        'message' => 'Top up saldo gagal!'
+                        'status' => -1,
+                        'message' => 'Saldo anda melebihi batas!'
                     );
                 }
-                pakai_voucher($kode_voucher);
             } else {
                 $response = array(
                     'status' => -1,

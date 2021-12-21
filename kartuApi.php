@@ -114,13 +114,13 @@ function update_card()
                 if($result) {
                     $response=array(
                         'status' => 1,
-                        'message' =>'Top up saldo success!'
+                        'message' =>'Update kartu berhasil!'
                     );
                 }
                 else {
                     $response=array(
                         'status' => 0,
-                        'message' =>'Top up saldo fail!'
+                        'message' =>'Update kartu gagal!'
                     );
                 }
             } else {
