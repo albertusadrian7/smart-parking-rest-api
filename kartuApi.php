@@ -5,34 +5,52 @@ if (function_exists($_GET['function'])) {
     $_GET['function']();
 }
 
+function user_has_card($card_uid, $id_user) 
+{
+    global $conn;
+    $result = mysqli_query($conn, "SELECT card_uid FROM kartu
+        WHERE card_uid = '$card_uid' OR id_user = '$id_user'");
+        
+        if(mysqli_num_rows ($result) > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+}
+
 // Fungsi untuk registrasi kartu pengunjung
 function register_user_card()
 {
     global $conn;
     $check = array(
         'card_uid' => '',
-        'saldo' => '',
         'id_user' => '');
     $check_match = count(array_intersect_key($_POST, $check));
-    $saldo = $_POST["saldo"];
-    $id_user = $_POST["id_user"];
     $card_uid = $_POST["card_uid"];
+    $id_user = $_POST["id_user"];
     if($check_match == count($check)){
-        $result = mysqli_query($conn, "INSERT INTO kartu SET
-        saldo = '$saldo',
-        id_user = '$id_user',
-        card_uid = '$card_uid'");
-        if($result) {
+        if(!user_has_card($card_uid, $id_user)) {
+            $result = mysqli_query($conn, "INSERT INTO kartu SET
+            card_uid = '$card_uid',
+            id_user = '$id_user',
+            saldo = 0");
+            if($result) {
+                $response = array(
+                    'status' => 1,
+                    'message' =>'Register user card success!'
+                );
+            }
+            else {
+                $response = array(
+                    'status' => 0,
+                    'message' =>'Register user card fail!'
+                );
+            }
+        } else {
             $response = array(
-                'status' => 1,
-                'message' =>'Register user card success!'
-            );
-        }
-        else {
-            $response = array(
-                'status' => 0,
-                'message' =>'Register user card fail!'
-            );
+            'status' => 0,
+            'message' =>'User sudah punya kartu!');
         }
     } else {
         $response = array(
