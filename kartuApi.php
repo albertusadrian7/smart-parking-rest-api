@@ -132,8 +132,7 @@ function update_card()
         } else {
             $response=array(
                 'status' => 0,
-                'message' =>'Wrong Parameter',
-                'data'=> $id_user
+                'message' =>'Wrong Parameter'
             );
         }
     } else {
