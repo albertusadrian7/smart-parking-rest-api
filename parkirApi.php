@@ -197,7 +197,7 @@ function get_parking_session_by_card_uid(){
     global $conn;
     if ($_POST) {
         $card_uid = $_POST["card_uid"];
-        $sql = "SELECT * FROM parkir WHERE card_uid = '$card_uid'";
+        $sql = "SELECT * FROM parkir WHERE card_uid = '$card_uid' AND total = 0";
         $query = mysqli_query($conn, $sql);
         $count = mysqli_num_rows($query);
         $result = array();
