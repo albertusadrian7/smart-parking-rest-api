@@ -19,6 +19,20 @@ function status_parkir($card_uid)
         }
 }
 
+function card_found($card_uid) 
+{
+    global $conn;
+    $result = mysqli_query($conn, "SELECT card_uid FROM kartu
+        WHERE card_uid = '$card_uid'");
+        
+        if(mysqli_num_rows ($result) > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+}
+
 // Fungsi untuk sesi parkir
 function create_parking_session()
 {
@@ -37,36 +51,42 @@ function create_parking_session()
     $waktu_masuk = $_POST["waktu_masuk"];
     $waktu_keluar = $_POST["waktu_keluar"];
     $total = $_POST["total"];
-    if(!status_parkir($card_uid)) {
-        if($check_match == count($check)){
-            $result = mysqli_query($conn, "INSERT INTO parkir SET
-            id_parkir = '$id_parkir',
-            id_user = '$id_user',
-            card_uid = '$card_uid',
-            waktu_masuk = '$waktu_masuk',
-            waktu_keluar = '$waktu_keluar',
-            total = '$total'");
-            if($result) {
+    if(card_found($card_uid)) {
+        if(!status_parkir($card_uid)) {
+            if($check_match == count($check)){
+                $result = mysqli_query($conn, "INSERT INTO parkir SET
+                id_parkir = '$id_parkir',
+                id_user = '$id_user',
+                card_uid = '$card_uid',
+                waktu_masuk = '$waktu_masuk',
+                waktu_keluar = '$waktu_keluar',
+                total = '$total'");
+                if($result) {
+                    $response = array(
+                        'status' => 1,
+                        'message' =>'Create parking session success!'
+                    );
+                }
+                else {
+                    $response = array(
+                        'status' => 0,
+                        'message' =>'Create parking session fail!'
+                    );
+                }
+            } else {
                 $response = array(
-                    'status' => 1,
-                    'message' =>'Create parking session success!'
-                );
-            }
-            else {
-                $response = array(
-                    'status' => 0,
-                    'message' =>'Create parking session fail!'
-                );
+                'status' => 0,
+                'message' =>'Wrong Parameter');
             }
         } else {
             $response = array(
             'status' => 0,
-            'message' =>'Wrong Parameter');
+            'message' =>'Anda harus keluar dulu!');
         }
     } else {
         $response = array(
         'status' => 0,
-        'message' =>'Anda harus keluar dulu!');
+        'message' =>'Kartu tidak terdaftar!');
     }
     header('Content-Type: application/json');
     echo json_encode($response);
@@ -85,35 +105,41 @@ function update_parking_session()
         $card_uid = $_POST["card_uid"];
         $waktu_keluar = $_POST["waktu_keluar"];
         $total = $_POST["total"];
-        if(status_parkir($card_uid)) {
-            if($check_match == count($check)) {
-                $result = mysqli_query($conn, "UPDATE parkir SET 
-                waktu_keluar = '$waktu_keluar',
-                total = '$total'
-                WHERE card_uid = '$card_uid' AND total = 0");
-                if($result) {
-                    $response=array(
-                        'status' => 1,
-                        'message' =>'Update parking session success!'
-                    );
-                }
-                else {
+        if(card_found($card_uid)) {
+            if(status_parkir($card_uid)) {
+                if($check_match == count($check)) {
+                    $result = mysqli_query($conn, "UPDATE parkir SET 
+                    waktu_keluar = '$waktu_keluar',
+                    total = '$total'
+                    WHERE card_uid = '$card_uid' AND total = 0");
+                    if($result) {
+                        $response=array(
+                            'status' => 1,
+                            'message' =>'Update parking session success!'
+                        );
+                    }
+                    else {
+                        $response=array(
+                            'status' => 0,
+                            'message' =>'Update parking session fail!'
+                        );
+                    }
+                } else {
                     $response=array(
                         'status' => 0,
-                        'message' =>'Update parking session fail!'
+                        'message' =>'Wrong Parameter',
+                        'data'=> $card_uid
                     );
                 }
             } else {
-                $response=array(
-                    'status' => 0,
-                    'message' =>'Wrong Parameter',
-                    'data'=> $card_uid
-                );
+                $response = array(
+                'status' => 0,
+                'message' =>'Anda belum masuk!');
             }
-        } else {
+        }  else {
             $response = array(
             'status' => 0,
-            'message' =>'Anda belum masuk!');
+            'message' =>'Kartu tidak terdaftar!');
         }
     } else {
         $response = array(
