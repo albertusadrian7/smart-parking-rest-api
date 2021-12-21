@@ -46,7 +46,7 @@ function create_voucher()
     $kode_voucher = generateRandomString();
     
     if($check_match == count($check)){
-        if(user_has_card($id_user)) {
+        if(user_has_card("", $id_user)) {
             $result = mysqli_query($conn, "INSERT INTO voucher SET
             id_voucher = '$id_voucher',
             id_user = '$id_user',
