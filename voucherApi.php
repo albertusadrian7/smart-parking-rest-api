@@ -244,7 +244,7 @@ function top_up(){
             if(status_voucher($kode_voucher) == "false") {
                 $nominal = nominal_voucher($kode_voucher);
                 $result = mysqli_query($conn, "UPDATE kartu SET 
-                saldo = saldo+$nominal
+                saldo = $nominal
                 WHERE card_uid = '$card_uid'");
                 if ($result) {
                     $response = array(

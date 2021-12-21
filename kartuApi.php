@@ -5,6 +5,34 @@ if (function_exists($_GET['function'])) {
     $_GET['function']();
 }
 
+function user_found($id_user) 
+{
+    global $conn;
+    $result = mysqli_query($conn, "SELECT id_user FROM user
+        WHERE id_user = '$id_user'");
+        
+        if(mysqli_num_rows ($result) > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+}
+
+function card_found($card_uid) 
+{
+    global $conn;
+    $result = mysqli_query($conn, "SELECT card_uid FROM kartu
+        WHERE card_uid = '$card_uid'");
+        
+        if(mysqli_num_rows ($result) > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+}
+
 function user_has_card($card_uid, $id_user) 
 {
     global $conn;
@@ -30,27 +58,33 @@ function register_user_card()
     $card_uid = $_POST["card_uid"];
     $id_user = $_POST["id_user"];
     if($check_match == count($check)){
-        if(!user_has_card($card_uid, $id_user)) {
-            $result = mysqli_query($conn, "INSERT INTO kartu SET
-            card_uid = '$card_uid',
-            id_user = '$id_user',
-            saldo = 0");
-            if($result) {
+        if(user_found($id_user)) {
+            if(!user_has_card($card_uid, $id_user)) {
+                $result = mysqli_query($conn, "INSERT INTO kartu SET
+                card_uid = '$card_uid',
+                id_user = '$id_user',
+                saldo = 0");
+                if($result) {
+                    $response = array(
+                        'status' => 1,
+                        'message' =>'Kartu berhasil didaftarkan!'
+                    );
+                }
+                else {
+                    $response = array(
+                        'status' => 0,
+                        'message' =>'Kartu gagal didaftarkan!'
+                    );
+                }
+            } else {
                 $response = array(
-                    'status' => 1,
-                    'message' =>'Register user card success!'
-                );
-            }
-            else {
-                $response = array(
-                    'status' => 0,
-                    'message' =>'Register user card fail!'
-                );
+                'status' => 0,
+                'message' =>'User sudah punya kartu!');
             }
         } else {
             $response = array(
             'status' => 0,
-            'message' =>'User sudah punya kartu!');
+            'message' =>'User tidak ditemukan!');
         }
     } else {
         $response = array(
@@ -62,7 +96,7 @@ function register_user_card()
 }
 
 // Fungsi untuk update user
-function top_up() 
+function update_card() 
 {
     global $conn;
     if (!empty($_POST["card_uid"])) {
@@ -73,19 +107,26 @@ function top_up()
         $saldo = $_POST["saldo"];
         $card_uid = $_POST["card_uid"];
         if($check_match == count($check)) {
-            $result = mysqli_query($conn, "UPDATE kartu SET 
-            saldo = '$saldo'
-            WHERE card_uid = '$card_uid'");
-            if($result) {
-                $response=array(
-                    'status' => 1,
-                    'message' =>'Top up saldo success!'
-                );
-            }
-            else {
+            if(card_found($card_uid)) {
+                $result = mysqli_query($conn, "UPDATE kartu SET 
+                saldo = '$saldo'
+                WHERE card_uid = '$card_uid'");
+                if($result) {
+                    $response=array(
+                        'status' => 1,
+                        'message' =>'Top up saldo success!'
+                    );
+                }
+                else {
+                    $response=array(
+                        'status' => 0,
+                        'message' =>'Top up saldo fail!'
+                    );
+                }
+            } else {
                 $response=array(
                     'status' => 0,
-                    'message' =>'Top up saldo fail!'
+                    'message' =>'Kartu belum terdaftar!'
                 );
             }
         } else {
